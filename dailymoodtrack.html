@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mood Journal</title>
+  <style>
+   /* General Body Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #e0f7fa, #f0f4c3);
+  margin: 0;
+  padding: 20px;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+/* Container Styling */
+.container {
+  max-width: 600px;
+  width: 70%;
+  margin: auto;
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+}
+
+.container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
+}
+
+/* Headings */
+h1, h2 {
+  text-align: center;
+  color: #1e3a8a;
+  margin-bottom: 15px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Labels */
+label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 16px;
+}
+
+/* Input and Select Elements */
+select, textarea {
+  width: 100%;
+  padding: 14px 18px;
+  margin-top: 6px;
+  border-radius: 12px;
+  border: 2px solid #cbd5e1;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+select:focus, textarea:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+}
+
+/* Button Styling */
+button {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Motivational Quote Styling */
+.quote {
+  font-style: italic;
+  color: #64748b;
+  text-align: center;
+  margin-top: 12px;
+  font-size: 16px;
+  background-color: #f1f5f9;
+  padding: 12px 20px;
+
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.quote:hover {
+  background-color: #b4e1e7;
+}
+
+/* History List */
+ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+ul li {
+  background-color: #f8fafc;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  border-left: 5px solid #3b82f6;
+  font-size: 15px;
+  color: #334155;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+ul li:hover {
+  background-color: #e5f3fc;
+  transform: translateX(5px);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 15px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  button {
+    font-size: 16px;
+  }
+
+  .quote {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 15px 10px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  button {
+    font-size: 14px;
+  }
+
+  .quote {
+    font-size: 12px;
+  }
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Daily Mood Journal</h1>
+    <div class="motivational-tips">
+        
+        <p class="quote" id="motivational-quote">"Believe in yourself and all that you are."</p>
+    </div>
+
+    <label for="mood">Your Mood:</label>
+    <select id="mood">
+        <option value="😊">Happy</option>
+        <option value="😐">Neutral</option>
+        <option value="😢">Sad</option>
+        <option value="😠">Angry</option>
+        <option value="😴">Tired</option>
+        <option value="😨">Anxious</option>
+        <option value="😄">Excited</option>
+        <option value="😕">Confused</option>
+        <option value="😎">Confident</option>
+        <option value="🥳">Celebratory</option>
+    </select>
+
+    <label for="entry">Journal Entry:</label>
+    <textarea id="entry" placeholder="Write something about your day..."></textarea>
+
+    <button onclick="saveEntry()">Save Entry</button>
+
+
+
+    <h2>Monthly Mood History</h2>
+    <ul id="history"></ul>
+  </div>
+  <script>
+    const quotes = [
+      "Keep going, you're doing great!",
+      "Every day is a fresh start.",
+      "You are stronger than you think.",
+      "Take a deep breath and keep moving.",
+      "Focus on the good today."
+    ];
+  
+    function getToday() {
+      return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    }
+  
+    function saveEntry() {
+      const mood = document.getElementById("mood").value;
+      const entry = document.getElementById("entry").value;
+      const date = getToday();
+      let data = JSON.parse(localStorage.getItem("moodEntries")) || {};
+      data[date] = { mood, entry };
+      localStorage.setItem("moodEntries", JSON.stringify(data));
+  
+      alert("Entry saved!");
+      document.getElementById("entry").value = "";
+      displayHistory();
+    }
+  
+    function displayQuote() {
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById("motivational-quote").textContent = randomQuote;
+    }
+  
+    function displayHistory() {
+      const historyList = document.getElementById("history");
+      const data = JSON.parse(localStorage.getItem("moodEntries")) || {};
+      historyList.innerHTML = "";
+      for (const date in data) {
+        const item = document.createElement("li");
+        item.textContent = `${date}: ${data[date].mood} - ${data[date].entry}`;
+        historyList.appendChild(item);
+      }
+    }
+  
+    window.onload = function() {
+      displayQuote();
+      displayHistory();
+    };
+  </script>
+  
+</body>
+</html>
